@@ -67,6 +67,12 @@ class CaptchaSolver:
                     "websiteURL": "https://minecraft-server-list.com/server/218820/vote/",
                     "websiteKey": "6LczktcUAAAAAMCHTeFyeDeVFmMSIULBINyBWxmE",
                     "isInvisible": True,
+                    "proxyType": "socks5",
+                    "proxyAddress": os.environ['PROXY_SERVER'],
+                    'proxyPort': os.environ['PROXY_PORT'],
+                    "proxyLogin": os.environ['PROXY_USER'],
+                    "proxyPassword": os.environ['PROXY_PWD'],
+                    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36",
                 }
             }) as response:
                 json_resp = await response.json()
@@ -149,7 +155,7 @@ async def update_users(users):
 
             }, headers=HEADERS) as response:
                 try:
-                    json_data = await response.json()
+                    json_data = json.loads(await response.text())
                 except:
                     logger.error(f"Response is not json:\n\n{await response.text()}")
                     return
