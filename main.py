@@ -103,7 +103,7 @@ class CaptchaSolver:
                 return json_resp['solution']['gRecaptchaResponse']
 
 
-def update_users(users):
+async def update_users(users):
     for user in users:
         last_processed = datetime.datetime.fromtimestamp(user['last_processed'])
         since_processed = int((datetime.datetime.now() - last_processed).total_seconds())
@@ -168,7 +168,7 @@ async def main():
             users = json.load(f)
 
         try:
-            update_users(users)
+            await update_users(users)
         except:
             logger.exception("Error while updating users")
 
