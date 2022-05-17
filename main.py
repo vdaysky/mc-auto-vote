@@ -111,11 +111,9 @@ class CaptchaSolver:
 
 async def update_users(users):
     for user in users:
-        last_processed = datetime.datetime.fromtimestamp(user['last_processed'])
-        since_processed = int((datetime.datetime.now() - last_processed).total_seconds())
+        last_processed = int(user['last_processed_day']))
 
-        if since_processed < 60 * 60 * 24:
-            logger.warning(f"Processed recently ({since_processed}s ago)")
+        if last_processed == datetime.datetime.now().day:
             continue
 
         username = user['name']
@@ -164,7 +162,7 @@ async def update_users(users):
                     logger.error(f"Vote request failed: {json_data}")
                 else:
                     logger.info(f"Vote result: {json_data}")
-                    user['last_processed'] = int(datetime.datetime.now().timestamp())
+                    user['last_processed'] = datetime.datetime.now().day
 
 
 async def main():
@@ -181,6 +179,6 @@ async def main():
         with open('data.json', 'w') as f:
             json.dump(users, f)
 
-        time.sleep(os.environ.get('VOTE_DELAY', 60))
+        time.sleep(int(os.environ.get('VOTE_DELAY', 60)))
 
 asyncio.get_event_loop().run_until_complete(main())
